@@ -1129,6 +1129,7 @@
   // Form submissions (client-side acknowledgement only)
   function handleForm(formId, modalId) {
     const form = document.getElementById(formId);
+    if (!form) return;
     form.addEventListener('submit', (e) => {
       e.preventDefault();
       const modal = document.querySelector('#' + modalId + ' .modal-body');
