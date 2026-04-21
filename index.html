@@ -1202,6 +1202,14 @@ async function trackEvent(event, details = "") {
 setTimeout(() => {
   trackEvent("page_visit");
 }, 1500);
+
+// Track investor button clicks
+document.querySelectorAll('[data-open="investor"]').forEach(btn => {
+  btn.addEventListener("click", () => {
+    trackEvent("investor_click");
+  });
+});
+
 </script>
 
 </body>
