@@ -1175,6 +1175,32 @@ function acceptCookies() {
 if (localStorage.getItem("cookiesAccepted")) {
   document.getElementById("cookie-banner").style.display = "none";
 }
+
+async function trackEvent(event, details = "") {
+  const cookie = document.cookie
+    .split("; ")
+    .find(row => row.startsWith("visitorData="));
+
+  if (!cookie) return;
+
+  const visitor = JSON.parse(decodeURIComponent(cookie.split("=")[1]));
+
+  await fetch("https://script.google.com/macros/s/AKfycbyKiiymB_jHMjRu6Q1DAcEXRn8DIixMLRw0yr_o2lkhyMojn2AZuTdFkHyJUtg2HOuK5g/exec", {
+    method: "POST",
+    body: JSON.stringify({
+      ip: visitor.ip,
+      city: visitor.city,
+      country: visitor.country,
+      event: event,
+      details: details
+    })
+  });
+}
+
+// Track page visit after visitor data is ready
+setTimeout(() => {
+  trackEvent("page_visit");
+}, 1500);
 </script>
 
 </body>
