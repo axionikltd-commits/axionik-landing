@@ -1002,6 +1002,12 @@
       </div>
     </div>
   </div>
+
+  <!-- Cookie Banner -->
+<div id="cookie-banner" style="position:fixed;bottom:20px;left:20px;background:#111;padding:12px;border-radius:8px;color:white;z-index:999;">
+  We use cookies for analytics.
+  <button onclick="acceptCookies()" style="margin-left:10px;">Accept</button>
+</div>
 </footer>
 
 <!-- MERCHANT MODAL -->
@@ -1132,6 +1138,42 @@
   handleForm('form-merchant', 'modal-merchant');
   handleForm('form-investor', 'modal-investor');
   handleForm('form-founders', 'modal-founders');
+
+  // ===== Visitor Tracking =====
+async function getVisitorData() {
+  try {
+    const res = await fetch("https://ipapi.co/json/");
+    const data = await res.json();
+
+    const visitor = {
+      ip: data.ip,
+      city: data.city,
+      region: data.region,
+      country: data.country_name,
+      org: data.org,
+      timestamp: new Date().toISOString()
+    };
+
+    document.cookie = "visitorData=" + encodeURIComponent(JSON.stringify(visitor)) + "; path=/; max-age=86400";
+
+    console.log("Visitor:", visitor);
+  } catch (err) {
+    console.log("Failed to fetch IP", err);
+  }
+}
+
+// Run on page load
+getVisitorData();
+
+// Cookie consent
+function acceptCookies() {
+  document.getElementById("cookie-banner").style.display = "none";
+  localStorage.setItem("cookiesAccepted", "true");
+}
+
+if (localStorage.getItem("cookiesAccepted")) {
+  document.getElementById("cookie-banner").style.display = "none";
+}
 </script>
 
 </body>
